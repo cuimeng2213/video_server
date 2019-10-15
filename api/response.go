@@ -1,14 +1,14 @@
 package main
-import(
+
+import (
 	"io"
 	"net/http"
 )
 
-func sendErrorResponse(w http.ResponseWriter){
-
+func sendErrorResponse(w http.ResponseWriter) {
+	io.WriteString(w, "")
 }
 
-
-func sendNormalRespnse(w http.ResponseWriter){
-
+func sendNormalRespnse(w http.ResponseWriter) {
+	io.WriteString(w, "")
 }
