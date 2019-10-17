@@ -39,7 +39,7 @@ func testQueryUser(t *testing.T) {
 }
 
 func testDeleteUser(t *testing.T) {
-	err := DeletUser("tom", "12345")
+	err := DeleteUser("tom", "12345")
 	if err != nil {
 		t.Errorf("Delete error%v\n", err)
 	}
