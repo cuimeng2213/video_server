@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"goLangStudy/video_server/api/defs"
+	"goLangStudy/video_server/api/utils"
+	"time"
 )
 
 func AddUserCredential(loginName string, pwd string) error {
@@ -51,7 +53,16 @@ func DeleteUser(loginName string, pwd string) error {
 
 func AddNewVideo(aid int, name string) (*defs.VideoInfo, error) {
 	// create uuid
-
-	return nil, nil
-
+	uuid, err := utils.NewUUID()
+	if err != nil {
+		return nil, err
+	}
+	ctime := time.Now()
+	video_info := &defs.VideoInfo{
+		ID:           uuid,
+		AuthorId:     aid,
+		Name:         name,
+		DisplayCtime: fmt.Sprintf("%s-%s-%s %s:%s%s"),
+	}
+	return video_info, nil
 }
