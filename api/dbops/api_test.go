@@ -11,12 +11,12 @@ func clearDB() {
 func TestMain(m *testing.M) {
 	clearDB()
 	m.Run()
-	clearDB()
+	//clearDB()
 }
 
 func TestApiFlow(t *testing.T) {
 	t.Run("ADD", testAddUser)
-	t.Run("Quert", testQueryUser)
+	t.Run("Query", testQueryUser)
 	t.Run("DEL", testDeleteUser)
 	t.Run("REGET", testReQueryUser)
 }

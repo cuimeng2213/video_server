@@ -52,18 +52,40 @@ func DeleteUser(loginName string, pwd string) error {
 	return nil
 }
 
+// 新增vido数据
 func AddNewVideo(aid int, name string) (*defs.VideoInfo, error) {
 	// create uuid
 	uuid, err := utils.NewUUID()
 	if err != nil {
 		return nil, err
 	}
-	ctime := time.Now()
+	t := time.Now()
+	ctime := t.Format("Jan 02 2006, 15:04:05")
+	fmt.Printf("%v \n", ctime)
+
+	stmt, err := dbConn.Prepare(`INSERT INTO video_info(id, author_id,name, display_ctime) 
+	VALUES(?,?,?,?)`)
+	if err != nil {
+		return nil, err
+	}
+	_, err = stmt.Exec(uuid, aid, name, ctime)
+	if err != nil {
+		return nil, err
+	}
+
 	video_info := &defs.VideoInfo{
-		ID:           uuid,
+		Id:           uuid,
 		AuthorId:     aid,
 		Name:         name,
-		DisplayCtime: fmt.Sprintf("%s-%s-%s %s:%s%s"),
+		DisplayCtime: ctime,
 	}
 	return video_info, nil
+}
+
+func GetVideo() (*defs.VideoInfo, error) {
+
+}
+
+func DeleteVideo() error {
+
 }
