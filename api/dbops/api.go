@@ -5,21 +5,22 @@ import (
 	"fmt"
 	"goLangStudy/video_server/api/defs"
 	"goLangStudy/video_server/api/utils"
+
 	"time"
 )
 
 func AddUserCredential(loginName string, pwd string) error {
-	smtIns, err := dbConn.Prepare("INSERT INTO users (login_name, pwd) VALUES(?,?)")
+	stmtIns, err := dbConn.Prepare("INSERT INTO users (login_name, pwd) VALUES(?,?)")
 
 	if err != nil {
 		fmt.Printf("Add user error : %v\n", err)
 		return err
 	}
-	_, err = smtIns.Exec(loginName, pwd)
+	_, err = stmtIns.Exec(loginName, pwd)
 	if err != nil {
 		return err
 	}
-	defer smtIns.Close()
+	defer stmtIns.Close()
 	return nil
 }
 
