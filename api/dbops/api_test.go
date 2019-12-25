@@ -1,7 +1,10 @@
 package dbops
 
 import (
+	"fmt"
+	"strconv"
 	"testing"
+	"time"
 )
 
 func clearDB() {
@@ -53,4 +56,35 @@ func testReQueryUser(t *testing.T) {
 	if pwd != "" {
 		t.Errorf("%v\n", "pwd error")
 	}
+}
+
+func TestComments(t *testing.T) {
+	clearDB()
+	t.Run("AddUser", testAddUser)
+	t.Run("AddComments", testAddComment)
+	t.Run("ListComments", testListComments)
+}
+
+func testAddComment(t *testing.T) {
+	vid := "123321"
+	aid := 1
+	text := "this is a test comments"
+	err := AddNewComments(vid, aid, text)
+	if err != nil {
+		t.Errorf(">>>>%+v \n", err)
+	}
+}
+func testListComments(t *testing.T) {
+	vid := "123321"
+	from := 1514764800
+	to, _ := strconv.Atoi(strconv.FormatInt(time.Now().UnixNano()/100000000, 10))
+	res, err := ListComments(vid, from, to)
+	fmt.Printf("AAAAAAAAAAAA: %d \n", len(res))
+	if err != nil {
+		t.Errorf(">>>>:%+v\n", err)
+	}
+	for i, ele := range res {
+		fmt.Printf("###:%d %v \n", i, ele)
+	}
+
 }

@@ -82,10 +82,78 @@ func AddNewVideo(aid int, name string) (*defs.VideoInfo, error) {
 	return video_info, nil
 }
 
-func GetVideo() (*defs.VideoInfo, error) {
+func GetVideo(vid string) (*defs.VideoInfo, error) {
+	stmt, err := dbConn.Prepare("SELECT author_id, name, display_ctime from video_info where id=?")
+	if err != nil {
+		return nil, err
+	}
+	var aid int
+	var name string
+	var display_ctime string
+	err = stmt.QueryRow(vid).Scan(&aid, &name, &display_ctime)
+	if err != nil {
+		return nil, err
+	}
+
+	return &defs.VideoInfo{
+		Id:           vid,
+		AuthorId:     aid,
+		Name:         name,
+		DisplayCtime: display_ctime,
+	}, nil
 
 }
 
-func DeleteVideo() error {
+// func DeleteVideo() error {
 
+// }
+
+func AddNewComments(vid string, aid int, text string) error {
+	cid, err := utils.NewUUID()
+	if err != nil {
+		return err
+	}
+	stmt, err := dbConn.Prepare(`INSERT INTO comments(id,video_id,author_id,content) VALUES(?,?,?,?)`)
+	if err != nil {
+		return err
+	}
+	_, err = stmt.Exec(cid, vid, aid, text)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	return nil
+}
+
+func ListComments(vid string, from, to int) ([]*defs.Comment, error) {
+	//
+	stmtOut, err := dbConn.Prepare(`SELECT comments.id,users.login_name,comments.content from comments inner join
+			users on comments.author_id = users.id 
+			where comments.video_id=? and comments.time > FROM_UNIXTIME(?) and comments.time <= FROM_UNIXTIME(?)
+		`)
+
+	var res []*defs.Comment
+	if err != nil {
+		fmt.Printf("###########: %+v\n", err)
+		return res, err
+	}
+	rows, err := stmtOut.Query(vid, from, to)
+	if err != nil {
+		return res, err
+	}
+	for rows.Next() {
+		var id, name, content string
+		if err := rows.Scan(&id, &name, &content); err != nil {
+			return res, err
+		}
+		c := &defs.Comment{
+			Id:      id,
+			VideoId: vid,
+			Author:  name,
+			Content: content,
+		}
+		res = append(res, c)
+	}
+	defer stmtOut.Close()
+	return res, nil
 }
