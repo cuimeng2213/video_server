@@ -5,7 +5,7 @@ Table: users -- 用户表
 id unsigened int, primary_key, auto_increment
 login_name varchar(64), unique key,
 pwd Text
- create table users (id int(10) unsigned , login_name varchar(64), pwd text);
+ create table users (id int(10) unsigned primary key auto_increment , login_name varchar(64), pwd text);
 
 Table: video_info
 id varchar(64), primary_key, not null --其中存放 uuid

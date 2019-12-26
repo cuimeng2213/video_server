@@ -3,7 +3,8 @@ package dbops
 import (
 	"database/sql"
 	"goLangStudy/video_server/api/defs"
-	"sync"
+	"strconv"
+	//"sync"
 )
 
 func InsertSession(sid string, ttl int64, uname string) error {
@@ -33,7 +34,7 @@ func RetrieveSession(sid string) (*defs.SimpleSession, error) {
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
-	if err, ttlInt := strconv.ParseInt(ttl, 10, 64); err == nil {
+	if ttlInt, err := strconv.ParseInt(ttl, 10, 64); err == nil {
 		session.TTL = ttlInt
 		session.Username = uname
 	} else {
