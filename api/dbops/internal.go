@@ -43,3 +43,20 @@ func RetrieveSession(sid string) (*defs.SimpleSession, error) {
 	defer stmt.Close()
 	return session, nil
 }
+
+func RetrieveAllSessions() (*sync.Map, error) {
+	m := &sync.Map{}
+	stmt, err := dbConn.Prepare("SELECT id, login_name, pwd from sessions")
+	if err != nil {
+		return nil, err
+	}
+	rows, err := stmt.Query()
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var id string
+		var ttlStr string
+		var login_name string
+	}
+}
